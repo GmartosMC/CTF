@@ -1,2 +1,3 @@
 # TryHackMe
-Writeups of my TryHackMe challenges
+
+Writeups de mis desafíos de TryHackMe
