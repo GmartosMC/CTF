@@ -25,3 +25,49 @@ gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u 
 ```
 
 ![Comando Gobuster](img/gobuster.webp)
+
+Hay varios directorios ocultos. Particularmente interesantes son robots.txt y login.php. Vamos a robots.txt:
+
+![robots.txt](img/robots.txt.webp)
+
+Hay un texto extraño que no forma parte de un fichero robots.txt normal. Tal vez sea la contraseña. Lo guardaré.
+
+Ahora vamos a login.php, y efectivamente está el portal de login. Pruebo el usuario y contraseña que encontramos:
+
+![Login Portal](img/portal.webp)
+
+¡Funciona! Ya tenemos acceso al servidor. Tenemos una terminal en la que podemos usar comandos. Usaré **pwd** para ver el directorio actual:
+
+![pwd](img/pwd.webp)
+
+Ahora **ls** para listar el contenido del directorio:
+
+![ls](img/ls.webp)
+
+Ahí está uno de los ingredientes. Intento leerlo con **cat** pero ese comando está bloqueado. Intento usar **nano** pero también está bloqueado. Pruebo con **less** y funciona:
+
+![Bandera 1](img/flag1.webp)
+
+Ya tenemos el primer ingrediente. Ahora leo el contenido de clue.txt:
+
+![pista](img/pista.webp)
+
+Tenemos una pista, nos indica que busquemos en el sistema de archivos. Pruebo a ver que hay en /home. Hay dos directorios, uno llamado Rick y otro llamado ubuntu. Busco en el de rick y encuentro el segundo ingrediente:
+
+![Rick](img/rick.webp)
+
+Lo leo con **less**, pero como hay un espacio tenemos que **escaparlo**:
+
+![Bandera 2](img/flag2.webp)
+
+Busqué en /home/ubuntu pero no había nada relevante. Pruebo si puedo escalar privilegios con **sudo** y funciona, ni siquiera necesito contraseña, pudiendo mirar en /root:
+
+![root](img/root.webp)
+
+Ahora lo leo con **less:**
+
+![bandera3](img/flag3.webp)
+
+Y con esto ya tenemos todos los ingredientes y hemos completado la máquina:
+
+![fin](img/fin.webp)
