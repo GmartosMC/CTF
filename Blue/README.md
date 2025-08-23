@@ -124,7 +124,7 @@ Ahora se nos pide la contraseña del usuario Jon. Vamos a usar **hashdump** para
 
 ![hashdump](img/hashdump.webp)
 
-Ahora hay varias formas de crackear el hash. Podríamos usar John the Ripper y tratar de sacarlo mediante diccionarios, yo he usado Crackstation por ser más rápido.
+Ahora hay varias formas de crackear el hash. Podríamos usar John the Ripper y tratar de sacarlo mediante listas de palabras, yo he usado Crackstation por ser más rápido.
 
 ![CrackStation](img/crackstation.webp)
 
