@@ -12,7 +12,7 @@ ping -c 1 10.10.12.50
 
 ![Ping](img/ping.webp)
 
-Para enumarar, voy a usar snap, con -sC para usar los scripts de reconocimiento por defecto,-sV para detectar versiones de los servicios, -sS para que sea en modo sigiloso, y -p- para que escanee todos los puertos.
+Para enumerar, voy a usar nmap, con -sC para usar los scripts de reconocimiento por defecto,-sV para detectar versiones de los servicios, -sS para que sea en modo sigiloso, y -p- para que escanee todos los puertos.
 
 ```bash
 nmap -p- -sV -sC -sS 10.10.12.50
@@ -20,11 +20,11 @@ nmap -p- -sV -sC -sS 10.10.12.50
 
 ![nmap](img/nmap.webp)
 
-De los puertos abiertos, los que más me llaman la atención son el **445**, que es el puerto de SMB, un puerto crítico por dóndepuede haber vulnerabilidades, y el **3389**, que es el de RDP, otro que podría ser utilizado.  la versión de Windows: **Windows 7 Professional 7601 Service Pack 1 microsoft-ds**, el nombred del Host, **JON-PC**, de lo que deducimos que hay un usuario llamado Jon en la máquina. Vemos que tanto **SMBv1** (smb-security-mode) como **SMBv2** (smb2-security-mode)
+De los puertos abiertos, los que más me llaman la atención son el **445**, que es el puerto de SMB, un puerto crítico por dónde puede haber vulnerabilidades, y el **3389**, que es el de RDP, otro que podría ser utilizado.  La versión de Windows: **Windows 7 Professional 7601 Service Pack 1 microsoft-ds**, el nombre del Host: **JON-PC**, de lo que deducimos que hay un usuario llamado Jon en la máquina. Vemos que tanto **SMBv1** (smb-security-mode) como **SMBv2** (smb2-security-mode) están activos.
 
 Ahora tenemos que encontrar alguna vulnerabilidad que explotar.
 
-Lo primero que se me ocurre es buscar en Google la versión de Windows que usa para ver si tiene vulnerabilidades. Buscnado en Google sobre esta versión del SO encontré esto:
+Lo primero que se me ocurre es buscar en Google la versión de Windows que usa para ver si tiene vulnerabilidades. Buscanddo en Google sobre esta versión del SO encontré esto:
 
 ![EternalBLue](img/eternalblue.webp)
 
@@ -80,7 +80,7 @@ Ahora ejecutamos el exploit con:
 run
 ```
 
-Efectivamente, la máquina es vulnerable al explot EternalBlue, todo ha salido bien, deberíamos ver algo similar a esto:
+Efectivamente, la máquina es vulnerable al explot EternalBlue, si todo ha salido bien, deberíamos ver algo similar a esto:
 
 ![Run](img/run.webp)
 
@@ -94,11 +94,11 @@ sessions -l
 
 Si solo has hecho esto será la 1.
 
-Ahora usamos **run** para ejecutar el exploit. Este paso puede dar problemas en esta máquina, y a mi me falló la primera vez y tuve que reiniciar la máquina, por eso tiene una ip distinta ahora. Si sale bien veremos algo similar a esto:
+Ahora usamos **run** para ejecutar el exploit. Este paso puede dar problemas en esta máquina, a mi me falló la primera vez y tuve que reiniciar la máquina, por eso tiene una ip distinta ahora. Si sale bien veremos algo similar a esto:
 
 ![Meterpreter](img/meterpreter.webp)
 
-Ahora tenemos usa sesión con la shell inversa de meterpreter,, que es ka sesión 2. La activamos con el comando:
+Ahora tenemos usa sesión con la shell inversa de meterpreter, que es la sesión 2. La activamos con el comando:
 
 ```shell
 sessions -i 2
