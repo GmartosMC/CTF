@@ -3,6 +3,7 @@
 ## Dificultad: Fácil
 
 ![Logo](img/logo.png)
+
 La secuela de Evil-GPT. Esta ya es más parecida a una IA tipo ChatGPT.
 
 Esta vez no nos dna un comando para acceder directamente. Empiezo con un ping para comprobar la conectividad:
