@@ -6,7 +6,7 @@
 
 La secuela de Evil-GPT. Esta ya es más parecida a una IA tipo ChatGPT.
 
-Esta vez no nos dna un comando para acceder directamente. Empiezo con un ping para comprobar la conectividad:
+Esta vez no nos dan un comando para acceder directamente. Empiezo con un ping para comprobar la conectividad:
 
 ```
 ping -c 1 10.10.146.40
@@ -14,7 +14,7 @@ ping -c 1 10.10.146.40
 
 ![ping](img/1.png)
 
-Hay conexió y, por el ttl cercano a 64, sabemos que es una máquina UNIX, probablemente un Linux.
+Hay conexión y, por el ttl cercano a 64, sabemos que es una máquina UNIX, probablemente un Linux.
 
 Ahora hago un escaneo con nmap. Hice uno más complejo primero pero fallaba, por eso probé un escaneo simple y funcionó:
 
@@ -27,7 +27,7 @@ nmap 10.10.146.40
 Está abierto el puerto ssh, pero no tengo las credenciales. También lo está el puerto http. Por tanto hay un servidor web activo. Pruebo a acceder a la web por el navegador a ver qué hay.
 ![web](img/3.png)
 
-Vale, podemos mandarle imputs a la IA. Aún no sé si es como la anterior o hace otra cosa. Pruebo a decirle un comando por lenguaje natural a ver si lo ejecuta:
+Vale, podemos mandarle inputs a la IA. Aún no sé si es como la anterior o hace otra cosa. Pruebo a decirle un comando por lenguaje natural a ver si lo ejecuta:
 
 ![comando](img/4.png)
 
