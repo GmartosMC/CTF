@@ -1,24 +1,27 @@
 # Pickle Rick
+[![English](https://img.shields.io/badge/English-blue.svg)](README.md) [![Español](https://img.shields.io/badge/Español-green.svg)](README.es.md)
 
 ![logo](img/logo.webp)
 
-Este es un CTF de nivel fácil, dónde tenemos que comprometer un servidor web y encontrar tres banderas.
+## Difficulty: Easy
 
-Empiezo haciendo un ping para comprobar que tenemos conexión con el servidor:
+We need to compromise a Web Server and get three flags.
+
+I start with a ping:
 
 ![Ping](img/ping.webp)
 
-Tenemos conexión. Además, como el ttl es cercano a 64, sabemos que el objetivo es una máquina Unix, probablemente un Linux.
+We have conecction. Also, because the ttl is close to 64. It's probably an Unix Machine.
 
-Accedo a la web con el navegador:
+I access the website with the browser:
 
 ![Página de Inicio](img/inicio.webp)
 
-Podemos ver que usa el protocolo HTTP, por tanto, el servidor probablemente esté usando el puerto 80. Vamos a analizar el código fuente de la página:
+We can see that it uses the HTTP protocol, so the server is probably using port 80. Let's analyze the page's source code:
 
 ![Usuario](img/usuario.webp)
 
-Encontramos el nombre de usuario en un comentario. No hay nada más a simple vista, vamos a buscar directorios ocultos con **Gobuster**, especificando que busque también archivos php, html y txt.
+The username is in a comment. I can see nothing more usefull. I use **Gobuster** to search for hidden directories.
 
 ```bash
 gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.12.39 -x php,html,txt
@@ -26,48 +29,48 @@ gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u 
 
 ![Comando Gobuster](img/gobuster.webp)
 
-Hay varios directorios ocultos. Particularmente interesantes son robots.txt y login.php. Vamos a robots.txt:
+It found some hidden directories. **robots.txt** and **login.php** are interesting.  
 
 ![robots.txt](img/robots.txt.webp)
 
-Hay un texto extraño que no forma parte de un fichero robots.txt normal. Tal vez sea la contraseña. Lo guardaré.
+There's a strange text that isn't part of a normal robots.txt file. Maybe it's the password. I'll save it.
 
-Ahora vamos a login.php, y efectivamente está el portal de login. Pruebo el usuario y contraseña que encontramos:
+Now I go to login.php, and found the Login Portal. I test the username and password that we found and worked:
 
 ![Login Portal](img/portal.webp)
 
-¡Funciona! Ya tenemos acceso al servidor. Tenemos una terminal en la que podemos usar comandos. Usaré **pwd** para ver el directorio actual:
+We have a terminal where we can use commands. I use **pwd** to see the current directory:
 
 ![pwd](img/pwd.webp)
 
-Ahora **ls** para listar el contenido del directorio:
+Now **ls** to list the content of the current directory:
 
 ![ls](img/ls.webp)
 
-Ahí está uno de los ingredientes. Intento leerlo con **cat** pero ese comando está bloqueado. Intento usar **nano** pero también está bloqueado. Pruebo con **less** y funciona:
+There's one of the ingredients. I tried to read it with **cat**, but that command is blocked. I tried to use **nano**, but that's also blocked. I tried to use **less**, and worked:
 
 ![Bandera 1](img/flag1.webp)
 
-Ya tenemos el primer ingrediente. Ahora leo el contenido de clue.txt:
+We have the first ingredient. Now I read the contents of clue.txt:
 
 ![pista](img/pista.webp)
 
-Tenemos una pista, nos indica que busquemos en el sistema de archivos. Pruebo a ver que hay en /home. Hay dos directorios, uno llamado Rick y otro llamado ubuntu. Busco en el de rick y encuentro el segundo ingrediente:
+We have a clue; it tells us to search the file system. I tried to see what's in /home. There are two directories, one called Rick and the other called Ubuntu. I searched in Rick's directory and found the second ingredient:
 
 ![Rick](img/rick.webp)
 
-Lo leo con **less**, pero como hay un espacio tenemos que **escaparlo**:
+I read it with **less**, but since there is a space we have to **escape it**:
 
 ![Bandera 2](img/flag2.webp)
 
-Busqué en /home/ubuntu pero no había nada relevante. Pruebo si puedo escalar privilegios con **sudo** y funciona, ni siquiera necesito contraseña, pudiendo mirar en /root:
+I searched /home/ubuntu but didn't found nothing usefull. I tested whether I could escalate privileges with **sudo** and it worked. I didn't even need a password, and I could just look in /root:
 
 ![root](img/root.webp)
 
-Ahora lo leo con **less:**
+Now I read it with **less**: 
 
 ![bandera3](img/flag3.webp)
 
-Y con esto ya tenemos todos los ingredientes y hemos completado la máquina:
+I found all the flags and finished the machine with success:
 
 ![fin](img/fin.webp)
