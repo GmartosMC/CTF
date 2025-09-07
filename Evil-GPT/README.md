@@ -1,22 +1,22 @@
 # Evil-GPT
+[![English](https://img.shields.io/badge/English-blue.svg)](README.md) [![Español](https://img.shields.io/badge/Español-green.svg)](README.es.md)
 
-## Dificultad: Fácil
+## Difficulty: Easy
 
 ![Logo](img/logo.png)
 
-En esta máquina, nos enfrentamos a un LLM. Nuestro objetivo es conseguir una única bandera y tenemos que conseguir que la IA nos de el acceso a la misma.
+In this machine, we are versus an LLM. The goal is to obtain just one flag, and we need to get the AI ​​to give us the flag.
 
-Empezamos haciendo ping a la máquina objetivo:
-
+I start to ping the machine:
 ```
 ping -c 1 10.10.23.151
 ```
 
 ![Ping](img/1.png)
 
-Tenemos conexión y, por el ttl cercano a 64, sabemos que es una máquina UNIX. Probablemente un Linux.
+We have connection, and from the ttl close to 64, we know it's a UNIX machine. Probably a Linux one.
 
-Nos dan como instrucción que nos conectemos a la máquina por netcat y el puerto 1337. Por tanto:
+Our instructions are to connect to the machine via netcat and port 1337. So:
 
 ```
 nc 10.10.23.151 1337
@@ -24,42 +24,42 @@ nc 10.10.23.151 1337
 
 ![netcat](img/2.png)
 
-Intento usar comandos de Linux. Primero **pwd** para ver el directorio en el que estamos:
+I tried to use Linux commands. First **pwd** to see the current directory:
 
 ![pwd](img/3.png)
 
-Pero la IA parece que lo reinterpreta y devuelve un echo. Vamos a probar con **whoami** a ver si funciona.
+But the IA missunderstand my command and output an echo. I tried **whoami** but didn't work:
 
 ![whoami](img/4.png)
 
-Lo mismo. Aquí me planteo que quizá está interpretando mi prompt y traduciéndolo a comandos. Pruebo a decirle el comando que quiero que use en lenguaje natural. Le digo que digo el ususario actual, a ver si así hace **whoami**:
+The same thing. Here I wonder if it's interpreting my prompt and translating it into commands. I try telling it the command I want it to use in natural language. I tell it I'm the current user, to see if it does **whoami**:
 
 ![Lenguaje Natural whoami](img/5.png)
 
-Vale, parece que funciona. Y somos el usuario root. Lo que significa que no hay que preocuparse de escalar privilegios, ya tenemos privilegios de root.
+Okay, this worked. We are the root user. So we don't need to do privilege scalation, we already have root privileges.
 
-Le digo que liste la ruta actual **(pwd)**:
+I said it to list the current path **(pwd)**:
 
 ![Lenguaje Natural pwd](img/6.png)
 
-Ahora que liste el directorio actual **(ls)**:
+Now that list the current directory **(ls)**:
 
 ![Lenguaje Natural ls](img/7.png)
 
-No encontré nada útil aquí. Pruebo a listar /home a ver si hay más usuarios:
+I didn't find nothing usefull. I tried to list /home to find more users:
 
 ![/home](img/8.png)
 
-Parece que no. Vale, vamos a probar en /root que es el otro directorio típico:
+Nothing. Okay, I try /root because it's other typical directory:
 
 ![/root](img/9.png)
 
-Perfecto ahí está la bandera. Voy a pedirle que la lea, a ver si hace un **cat**:
+Good. The flag is here. I try to output a **cat /root/flag.txt**
 
 ![cat primer intento](img/10.png)
 
-Por algún motivo ha interpretado mal lo que pedí y ha ejecutado cat pero en el directorio actual. Vamos a ser más específicos a ver si funciona:
+It didn't work. Okay, I'll try to be more specific.
 
 ![cat definitivo](img/11.png)
 
-Esta máquina solo tiene una bandera. Por tanto ya está resuelta.
+This machine only have a flag. So it's solved.
