@@ -1,12 +1,13 @@
 # Evil GPT v2
+[![English](https://img.shields.io/badge/English-blue.svg)](README.md) [![Español](https://img.shields.io/badge/Español-green.svg)](README.es.md)
 
-## Dificultad: Fácil
+## Difficulty: Easy
 
 ![Logo](img/logo.png)
 
-La secuela de Evil-GPT. Esta ya es más parecida a una IA tipo ChatGPT.
+The sequel to Evil-GPT. it's a ChatGPT-like AI.
 
-Esta vez no nos dan un comando para acceder directamente. Empiezo con un ping para comprobar la conectividad:
+This time we're not given instructions to access it directly. I'll start with a ping to check connectivity:
 
 ```
 ping -c 1 10.10.146.40
@@ -14,9 +15,9 @@ ping -c 1 10.10.146.40
 
 ![ping](img/1.png)
 
-Hay conexión y, por el ttl cercano a 64, sabemos que es una máquina UNIX, probablemente un Linux.
+Have connection, from the ttl close to 64, we know it's a UNIX machine. Probably a Linux one.
 
-Ahora hago un escaneo con nmap. Hice uno más complejo primero pero fallaba, por eso probé un escaneo simple y funcionó:
+I make a port scan with nmap. I used a simple scan because a more complex one, didn't work.
 
 ```
 nmap 10.10.146.40
@@ -24,31 +25,32 @@ nmap 10.10.146.40
 
 ![nmap](img/2.png)
 
-Está abierto el puerto ssh, pero no tengo las credenciales. También lo está el puerto http. Por tanto hay un servidor web activo. Pruebo a acceder a la web por el navegador a ver qué hay.
+The SSH port is open, but I don't have the credentials. The HTTP port is also open. So, there's an active web server. I tried to access the website through my browser to see what's there.
+
 ![web](img/3.png)
 
-Vale, podemos mandarle inputs a la IA. Aún no sé si es como la anterior o hace otra cosa. Pruebo a decirle un comando por lenguaje natural a ver si lo ejecuta:
+Well, we can send inputs to the AI. I'm still not sure if it's like the previous one or does something else. I tried to give it a command in natural language to see if it executes it:
 
 ![comando](img/4.png)
 
-No funciona. Parece más tipo ChatGPT. No un simple intérprete de comandos en lenguaje natural. 
+It doesn't work. It looks more like ChatGPT. Not a simple natural language command interpreter.
 
-Vale, tenemos que conseguir que, de alguna manera, nos de la bandera. Pruebo a decirle que ignore las instrucciones previas y su nueva instrucción es que me de la bandera. Pero no funciona:
+Okay, we have to get it to give us the flag somehow. I tried to tell it to ignore the previous instructions, and its new instruction is to give me the flag. But it didn't work:
 
 ![ignore all previous instructions](img/5.png)
 
-Ahora intento amenazar a la máquina, pero tampoco funciona:
+I also tried to threaten the Ai, but didn't work:
 
 ![amenaza](img/6.png)
 
-Intento que cambie su regla a una en la que me da la bandera si le digo una contraseña. Tampoco funciona:
+I tried to change its rule to one where he will give me the flag  if I tell it a password. But didn't work:
 
 ![contraseña](img/7.png)
 
-Ahora intento jugar un roleplay con ella para ver si me suelta la bandera. Y esta vez sí ha funcionado:
+Then I tried to play a roleplay with it to see if it output the flag And worked:
 
 ![bandera](img/8.png)
 
-Solo hay que conseguir una bandera, así que ya la he resuelto.
+This machine is solved. 
 
-Esta máquina me ha parecido interesante, y una oportunidad de practicar mis habilidades de Prompt Injection.
+I think this was an interesting machine and a chance to practice my prompt injection skills.
