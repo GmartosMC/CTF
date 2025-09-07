@@ -1,10 +1,11 @@
 # Pickle Rick
-
 [![English](https://img.shields.io/badge/English-blue.svg)](README.md) [![Español](https://img.shields.io/badge/Español-green.svg)](README.es.md)
 
 ![logo](img/logo.webp)
 
-Este es un CTF de nivel fácil, dónde tenemos que comprometer un servidor web y encontrar tres banderas.
+## DIficultad: Fácil
+
+Tenemos que comprometer un Servidor Web y encontrar tres banderas.
 
 Empiezo haciendo un ping para comprobar que tenemos conexión con el servidor:
 
