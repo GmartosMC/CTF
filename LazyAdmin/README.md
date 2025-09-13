@@ -1,10 +1,11 @@
 # LazyAdmin
+[![English](https://img.shields.io/badge/English-blue.svg)](README.md) [![Español](https://img.shields.io/badge/Español-green.svg)](README.es.md)
 
-## Dificultad: Fácil
+## Difficulty: Easy
 
 ![Logo](img/logo.jpeg)
 
-Empezamos haciendo un ping para comprobar la conectividad:
+I start with a ping to check the connection
 
 ```
 ping -c 1 10.10.176.70
@@ -12,69 +13,68 @@ ping -c 1 10.10.176.70
 
 ![ping](img/1.png)
 
-Tenemos conexión, y por el ttl cercano a 64, es una máquina UNIX, probablemente un Linux.
+It's works. And for the ttl close to 64, it's a Linux Machine.
 
-Ahora usamos nmap para buscar puertos abiertos:
-
+I use nmap to scan for open ports
 ```
 nmap -p- -sV -sC -sS -vvv 10.10.176.70
 ```
 
 ![nmap](img/2.png)
 
-Tiene abiertos el puerto 80 (HTTP) y el 22 (SSH). Por tanto es un servidor web. Vamos a acceder a la web.
+Ports 80 (HTTP) and 22 (SSH) are open. So it's a website. I check the web:
 
 ![web](img/3.png)
 
-Es lo que muestra Apache por defecto. Entonces es un apache.
+It's shows the Apache's default page.
 
-Lanzo gobuster para buscar directorios ocultos:
-
+I run gobuster to fuzz for hidden directories
 ```shell
 gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.176.70/ -x txt,js,html,php
 ```
 
 ![gobuster](img/4.png)
 
-En content tenemos esto:
+I check content:
 
 ![SweetRice](img/5.png)
 
-Parece que esta web usa un CMS llamado SweetRice, del que nunca había oído hablar antes.
+It seems this website uses a CMS called SweetRice, which I've never heard of before.
 
-No parece haber nada más, voy a lanzar gobuster iterando sobre  /content a ver si nos lleva a alguna parte:
+I can't find nothing more interesting, so I run gobuster and iterate over /content to search for more subdirectories:
 
 ![gobuster2](img/6.png)
 
-En /content/inc encuentro un index con ficheros del servidor:
+In /content/inc I find an index with the server's files:
 
 ![inc](img/7.png)
 
-Buscando en el index, encuentro un backup de una base de datos SQL. Obviamente en una base de datos puedes encontrar todo tipo de información confidencial, por tanto la descargo.
+Searching the index, I find a backup of a SQL database. You can find all kinds of confidential information in a database, so I download it.
 
 ![SQL](img/8.png)
 
-En /content/as encuentro el Portal de Login:
+In /content/as I found the Login Portal:
 
 ![Login](img/9.png)
 
-Abro la base de datos con un editor de texto, cualquiera que haya trabajado con Bases de Datos SQL sabe que el fichero .sql se puede leer en texto plano. Es la creación de una tabla MySQL, la línea interesante es esta:
+I open the database with a text editor. Because a .sql file can be read in plain text. This is the create  of a MySQL table. The interesting line is this:
 
 ![base de datos](img/10.png)
 
-Vemos que es un INSERT. Y, si nos fijamos, tenemos que admin es "manager" y passwd es, ese número largo. Lo primero que hago es probar las credenciales tal cual, no funciona. Luego abro Cyberchef a ver si está codificado, pero no consigo sacar nada. La otra opción que se me ocurre es que sea un hash.
+It's an INSERT. And, if we look closely, we see that admin is "manager" and passwd is that long number. The first thing I do is try the credentials as is, but it doesn't work. Then I open Cyberchef to see if it's encrypted, but I failed again. The other option I can think of is that it's a hash.
 
-Uso hashid, que nos dice de mayor a menos que tipo de hash es más probable que sea, si es un hash.
+
+I use hashid, which tells us from highest to lowest what type of hash it is most likely to be, if it is a hash.
 
 ![hashid](img/11.png)
 
-La idea ahora es usar John the Ripper con la lista rockyou.txt, e ir probando los distintos  tipos de hashes a ver si logramos crackear la contraseña por fuerza bruta.
+I use John the Ripper with rockyou.txt.
 
-Primero creo un fichero y escribo en el el hash con un echo:
+First I create a file and write the hash to it with an echo:
 
 ![hash](img/12.png)
 
-Ahora probamos con John the Ripper. Primero probé con md2 pero no conseguí nada, después con md5 y ya funcionó:
+Now let's try John the Ripper. First I tried md2 but it didn't work, then I tried md5 and it worked:
 
 ```
 john --wordlist=/usr/share/wordlists/rockyou.txt --format=raw-md5 hash.txt
@@ -82,21 +82,21 @@ john --wordlist=/usr/share/wordlists/rockyou.txt --format=raw-md5 hash.txt
 
 ![John the Ripper](img/13.png)
 
-Nos ha sacado la contraseña. La pruebo junto con "manager" como usuario, y funciona:
+We now have the password. I try it with "manager" as the username, and it works:
 
 ![Acceso Panel](img/14.png)
 
-Veo que la versión de SweetRice es 1.5.1 busco en Google si tiene vulnerabilidades conocidos, y es vulnerable a Arbitrary File Upload. Por tanto sabiendo eso y que tiene muchos directorios accesibles desde fuera, deberíamos poder montarnos una shell inversa para acceder por terminal.
+So the SweetRice's version is 1.5.1. I've Googled to see if it has any known vulnerabilities, and it's vulnerable to Arbitrary File Upload. So, knowing that and the fact that it has many directories accessible from outside, I should be able to set up a reverse shell to access it through the terminal.
 
 ![exploit](img/15.png)
 
-He utilizado la Shell Inversa en PHP de [pentestmonkey](https://github.com/pentestmonkey/php-reverse-shell) 
+I used [pentestmonkey](https://github.com/pentestmonkey/php-reverse-shell) PHP Reverse Shell
 
-Solo tenemos que cambiar la IP por la de nuestra máquina, y el puerto por el que queramos escuchar. Para saber nuestra IP simplemente usamos el comando **ip a**. He usado el puerto 4444, pero cualquiera que no esté ocupado vale.
+Just need to change the IP to ours. You can use **ip a** command to know the IP. And a random port that is not used.
 
 ![IP y Puerto](img/16.png)
 
-Pongo netcat a escuchar por el puerto 4444:
+I set netcat to listen on port 4444:
 
 ```shell
 nc -lvnp 4444
@@ -104,25 +104,24 @@ nc -lvnp 4444
 
 ![netcat](img/17.png)
 
-Ahora necesitamos subir la shell inversa y mandarle una petición GET para que el servidor active el script y podamos tener la shell inversa. Intento subir el fichero en distintos sitios, lo intenté en medio, haciendo un post, pero no me dejaba subirlo, probé con otras extensiones y sí me dejaba, por tanto el problema es que no permite subir ficeros .php
+Now we need to upload the reverse shell and send a GET request to it so the server activates the script and we can have the reverse shell. I tried uploading the file in different places. I tried it in media, making a post, but it wouldn't let me upload it. I tried other extensions and it did let me. So the problem is that it won't let me upload .php files.
 
-Seguí buscando y en Ads, vi que se podía subir código:
+I kept searching and in Ads, I saw that I could upload embedded code:
 
 ![Ads](img/18.png)
 
-Decido pegar el script aquí a ver si se sube a algún lado accesible.
+I decide to paste the script here to see if it's uploading somewhere accessible.
 
 ![script](img/19.png)
 
-Se ha subido, ahora a ver si está accesible.
-
+Okay it just uploaded. Time to try:
 ![shell](img/20.png)
 
-Hago click para mandar la petición GET al servidor. Y funciona, ya tengo acceso desde la terminal con la que estábamos escuchando con netcat:
+Perfecto. So I click it to send the GET request to the server. And it works. I now have access from the terminal I'm using to listen with netcat:
 
 ![acceso](img/21.png)
 
-Ahora tenemos una shell básica de netcat, pero queremos convertirla en una TTY, con más funcionalidades. Para ello usamos el siguiente comando de Python:
+Now we have a basic netcat shell, but we want to convert it into a TTY with more features. To do this, we use the following Python command:
 
 ```shell
 python -c 'import pty; pty.spawn("/bin/bash")'
@@ -130,50 +129,50 @@ python -c 'import pty; pty.spawn("/bin/bash")'
 
 ![mejorar shell con python](img/22.png)
 
-Con un **whoami** vemos que no somos root. En /home está el usuario itguy, y en /home/itguy está la primera bandera:
+With **whoami** command I can see to see that I'm not root. The user itguy is in /home, and the first flag is in /home/itguy:
 
 ![bandera1](img/23.png)
 
-Uso **sudo -l** para ver que permisos tengo:
+I try to see weird permissions with **sudo -l**:
 
 ![sudo -l](img/24.png)
 
-Podemos ejecutar con permisos de sudo /usr/bin/perl /home/itguy/backup.pl
+So I can run with sudo permissions /usr/bin/perl /home/itguy/backup.pl
 
-Vamos a ver el contenido de /home/itguy/backup.pl:
+Let's see the content of /home/itguy/backup.pl:
 
 ![backup](img/25.png)
 
-Basicamente ejecuta un script en bash localizado en /etc/copy.sh
+So, this executes a bash script located in /etc/copy.sh
 
-Vamos a ver su contenido:
+Let's see it:
 
 ![copy](img/26.png)
 
-Vale, esto crea una shell inversa en bash. Ahora quiero saber que permisos tengo, voy a usar **ls -l** para verlo:
+So, this make a bash reverse shell. I use **ls -l** to check my permissions on this file:
 
 ![ls -l](img/27.png)
 
-Wow, tenemos literalmente más permisos que el dueño del fichero. En cualquier caso, tenemos permiso de escritura, que es lo que me interesa.
+Wow, I literally have more permissions than the file owner. In any case, I have write permission, which is what I'm interested in.
 
-Entonces, para escalar privilegios, recordemos que los procesos hijos heredan los permisos del padre, por tanto, al ejecutar el primer script de la cadena con permisos de root, al usar sudo, acabaremos teniendo una shell en  bash con permisos de root.
+So, to escalate privileges, remember that child processes inherit permissions from their parent, so when you run the first script in the chain with root permissions, using sudo, you'll end up with a bash shell with root permissions.
 
-Entonces, podemos usar el puerto por defecto del script, el 5554, porque mientras esté libre da igual, pero la IP debe ser la de nuestra máquina. Lo que hago es, copiar el script con ctrl + shift + c. Modificarlo en un editor de texto, y pegarlo como el contenido de un echo que mandamos al script con >.
+So, I can use the script's default port, 5554, because as long as it's free it doesn't matter, but the IP address must be our machine's. What I do is copy the script with Ctrl + Shift + C. Edit it in a text editor, and paste it as the content of an echo that we send to the script with >.
 
 ![echo](img/28.png)
 
-Nos ponemos a esuchar en el puerto 5544
+Set netcat in port 5544
 
 ![netcat](img/29.png)
 
-Ejecutamos el primer script de la cadena con sudo:
+We run the first script in the chain with sudo:
 
 ![sudo](img/30.png)
 
-**¡Funciona!**:
+**It works!**:
 
 ![root](img/31.png)
 
-Ya está, ahora ya simplemente vamos a /root a leer la bandera:
+That's it, now we simply go to /root to read the flag:
 
 ![bandera 2](img/32.png)
