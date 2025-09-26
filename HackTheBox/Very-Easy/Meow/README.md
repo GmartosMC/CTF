@@ -3,7 +3,7 @@
 
 ## Difficulty: Very Easy
 
-![logo](img/logo.png)
+<img src="img/logo.png" alt="Alt Text" width="200">
 
 I start with a ping:
 

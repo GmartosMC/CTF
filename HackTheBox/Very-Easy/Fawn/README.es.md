@@ -1,9 +1,9 @@
 # Fawn
 [![English](https://img.shields.io/badge/English-blue.svg)](README.md) [![Español](https://img.shields.io/badge/Español-green.svg)](README.es.md)
 
-![logo](img/logo.png)
-
 ## Dificultad: Muy Fácil
+
+<img src="img/logo.png" alt="Alt Text" width="200">
 
 Empiezo usando nmap para enumerar los puertos de la máquina:
 

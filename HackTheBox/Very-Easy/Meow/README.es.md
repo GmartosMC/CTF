@@ -3,7 +3,7 @@
 
 ## Dificultad: Muy Fácil
 
-![logo](img/logo.png)
+<img src="img/logo.png" alt="Alt Text" width="200">
 
 Empiezo con un ping:
 
