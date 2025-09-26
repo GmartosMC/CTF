@@ -5,7 +5,7 @@
 
 ## Difficulty: Very Easy
 
-I start using nmap to enumera the ports:
+I start using nmap to enumerate the ports:
 
 ```
 sudo nmap -sS -sV -sC -n --min-rate 5000 -p- 10.129.203.92 -oA scan
